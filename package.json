@@ -1,0 +1,28 @@
+{
+  "name": "mozillians-client",
+  "version": "0.1.0",
+  "description": "Client library for mozillians.org",
+  "author": "Jonas Finnemann Jensen <jopsen@gmail.com>",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonasfj/node-mozillians-client.git"
+  },
+  "main": "./lib/mozillians",
+  "scripts": {
+    "compile": "babel-compile -c taskcluster-lib-rules/babel src:lib test:.test",
+    "prepublish": "npm run compile",
+    "pretest": "npm run compile",
+    "test": "mocha -u tdd .test/*_test.js"
+  },
+  "dependencies": {
+    "babel-runtime": "^5.8.25",
+    "lodash": "^3.10.1"
+  },
+  "devDependencies": {
+    "babel-compile": "^0.0.3",
+    "taskcluster-lib-rules": "^1.0.3",
+    "mocha": "^2.3.3",
+    "source-map-support": "^0.3.2"
+  }
+}

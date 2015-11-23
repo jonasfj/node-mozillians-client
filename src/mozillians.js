@@ -1,8 +1,9 @@
 import https from 'https'
 import assert from 'assert'
-import querystring from 'querystring'
+import qs from 'querystring'
 import url from 'url'
 import _ from 'lodash'
+import crypto from 'crypto'
 
 /** Transient HTTP errors that causes a retry */
 const TRANSIENT_HTTP_ERROR_CODES = [
@@ -170,11 +171,12 @@ export default class Mozillians {
 
   _getFromUrlReference(reference) {
     let options = url.parse(reference, true);
+    let cheatCache = '&cheat-cache=' + crypto.randomBytes(18).toString('hex');
     delete options.query.api_key;
     return retry(() => request({
       method: 'GET',
       hostname: options.hostname,
-      path: options.pathname + '?' + querystring.stringify(options.query),
+      path: options.pathname + '?' + qs.stringify(options.query) + cheatCache,
       headers: {
         'X-API-KEY': this._apiKey
       },
@@ -184,10 +186,11 @@ export default class Mozillians {
 
   async _getFromOptions(path, options) {
     // Get the result
+    let cheatCache = '&cheat-cache=' + crypto.randomBytes(18).toString('hex');
     let result = await retry(() => request({
       method: 'GET',
       hostname: this._options.hostname,
-      path: path + '?' + querystring.stringify(options),
+      path: path + '?' + qs.stringify(options) + cheatCache,
       headers: {
         'X-API-KEY': this._apiKey
       },

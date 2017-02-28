@@ -5,7 +5,7 @@ Install with `npm mozillians-client --save`, and initialize as follows:
 ```js
 var Mozillians = require('mozillians-client');
 
-var mozillians = new Mozillians({apiKey: 'YOUR_API_KEY'});
+var mozillians = new Mozillians('YOUR_API_KEY', {retries: 6});
 
 mozillians.users({email: '...'}).then(function(result) {
   // Do something with result

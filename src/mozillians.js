@@ -201,17 +201,17 @@ export default class Mozillians {
     if (result.results) {
       result.results.forEach(obj => {
         if (obj._url) {
-          obj.details = () => this._getFromUrl(obj._url);
+          obj.details = () => this._getFromUrlReference(obj._url);
         }
       });
     }
 
     // Methods to get next and previous page
     if (result.next) {
-      result.nextPage = () => this._getFromUrl(result.next);
+      result.nextPage = () => this._getFromUrlReference(result.next);
     }
     if (result.previous) {
-      result.previousPage = () => this._getFromUrl(result.previous);
+      result.previousPage = () => this._getFromUrlReference(result.previous);
     }
 
     // Return the result

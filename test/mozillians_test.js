@@ -4,6 +4,8 @@ require('source-map-support').install();
 
 suite('Mozillians', () => {
 
+  let jonas;
+
   test('users', async () => {
     let mozillians = new Mozillians(process.env.MOZILLIANS_API_KEY);
 
@@ -15,8 +17,16 @@ suite('Mozillians', () => {
 
     let result = await mozillians.users({email: 'jopsen@gmail.com'});
     assert(result.results.length === 1, 'Expected exactly Jonas');
-    let jonas = result.results[0];
+    jonas = result.results[0];
     assert(jonas.is_vouched, 'Jonas ought to be vouched he wrote this!');
+  });
+
+  test('users.details', async () => {
+    let mozillians = new Mozillians(process.env.MOZILLIANS_API_KEY);
+
+    // uses `jonas` from previous test
+    let details = await jonas.details();
+    assert(details.full_name.value === 'Jonas Finnemann Jensen', 'full_name is set');
   });
 
   test('groups', async () => {

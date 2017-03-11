@@ -1,6 +1,6 @@
 {
   "name": "mozillians-client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Client library for mozillians.org",
   "author": "Jonas Finnemann Jensen <jopsen@gmail.com>",
   "license": "MPL-2.0",

@@ -12,10 +12,7 @@ const TRANSIENT_HTTP_ERROR_CODES = [
   'EADDRINUSE',
   'ESOCKETTIMEDOUT',
   'ECONNREFUSED',
-  500,
-  502,
-  503,
-  504,
+  'InternalServerError',
 ];
 
 /**
@@ -73,14 +70,27 @@ let request = (options, timeout) => {
 
         // Handle failed authentication
         if (res.statusCode === 403) {
+          let detail = (payload || {}).detail || 'unknown';
           let err = new Error("Authentication failed: " + detail);
           err.detail = payload;
           err.code = res.statusCode;
           return reject(err);
         }
 
+        // Handle internal server error
+        if (500 <= res.statusCode && res.statusCode < 600) {
+          let detail = (payload || {}).detail || 'unknown';
+          let err = new Error("Internal Server Error, statusCode: " + res.statusCode +
+                              " - " + detail);
+          err.detail = payload;
+          err.code = 'InternalServerError';
+          err.statusCode = res.statusCode;
+          return reject(err);
+        }
+
         // Handle non-200 responses
         if (res.statusCode !== 200) {
+          let detail = (payload || {}).detail || 'unknown';
           let err = new Error("Unexpected statusCode: " + res.statusCode +
                               " - " + detail);
           err.detail = payload;
@@ -95,7 +105,7 @@ let request = (options, timeout) => {
           let err = new Error("Failed to parse JSON payload: " + payload);
           err.detail = payload;
           err.code = 'INVALID_JSON';
-          return eject(err);
+          return reject(err);
         }
 
         // return payload
@@ -306,4 +316,3 @@ export default class Mozillians {
     return this._getFromOptions('/api/v2/groups/', options);
   }
 };
-

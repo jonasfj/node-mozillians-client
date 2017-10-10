@@ -5,6 +5,12 @@ require('source-map-support').install();
 suite('Mozillians', () => {
 
   let jonas;
+  beforeEach(function() {
+    if (!process.env.MOZILLIANS_API_KEY) {
+      console.log('set MOZILLIANS_API_KEY to run tests');
+      this.skip();
+    }
+  });
 
   test('users', async () => {
     let mozillians = new Mozillians(process.env.MOZILLIANS_API_KEY);

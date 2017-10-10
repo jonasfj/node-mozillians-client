@@ -21,8 +21,8 @@
   },
   "devDependencies": {
     "babel-compile": "^0.0.3",
-    "taskcluster-lib-rules": "^1.0.3",
-    "mocha": "^2.3.3",
-    "source-map-support": "^0.3.2"
+    "mocha": "4.0.1",
+    "source-map-support": "^0.3.2",
+    "taskcluster-lib-rules": "^1.0.3"
   }
 }

@@ -43,7 +43,8 @@ Create new Mozillians client with given `apiKey` and options:
    * `retries`, max number of request retries,
    * `delayFactor`, factor by which delays between retries increase,
    * `maxDelay`, maximum delay between retries,
-   * `transientErrorCodes`, error codes for which requests are retried
+   * `transientErrorCodes`, error.codes for which requests are retried; these can
+     be syscall errors like "ECONNRESET" or integer HTTP error codes like 503.
 
 ### `Mozillians#users(options)`
 Get users, given options:

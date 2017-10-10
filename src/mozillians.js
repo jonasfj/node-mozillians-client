@@ -5,13 +5,17 @@ import url from 'url'
 import _ from 'lodash'
 import crypto from 'crypto'
 
-/** Transient HTTP errors that causes a retry */
+/** Transient error.codes that cause a retry */
 const TRANSIENT_HTTP_ERROR_CODES = [
   'ETIMEDOUT',
   'ECONNRESET',
   'EADDRINUSE',
   'ESOCKETTIMEDOUT',
-  'ECONNREFUSED'
+  'ECONNREFUSED',
+  500,
+  502,
+  503,
+  504,
 ];
 
 /**
@@ -65,29 +69,33 @@ let request = (options, timeout) => {
 
       // Resolve on request end
       res.once('end', function() {
-        // Add payload property to response object
         let payload = chunks.join('');
-        try {
-          payload = JSON.parse(payload);
-        } catch (err) {
-          throw new Error("Failed to parse JSON payload: " + payload);
-        }
 
         // Handle failed authentication
         if (res.statusCode === 403) {
-          let detail = (payload || {}).detail || 'unknown';
           let err = new Error("Authentication failed: " + detail);
-          err.detail = detail;
+          err.detail = payload;
+          err.code = res.statusCode;
           return reject(err);
         }
 
         // Handle non-200 responses
         if (res.statusCode !== 200) {
-          let detail = (payload || {}).detail || 'unknown';
           let err = new Error("Unexpected statusCode: " + res.statusCode +
                               " - " + detail);
-          err.detail = detail;
+          err.detail = payload;
+          err.code = res.statusCode;
           return reject(err);
+        }
+
+        // Add payload property to response object
+        try {
+          payload = JSON.parse(payload);
+        } catch (err) {
+          let err = new Error("Failed to parse JSON payload: " + payload);
+          err.detail = payload;
+          err.code = 'INVALID_JSON';
+          return eject(err);
         }
 
         // return payload

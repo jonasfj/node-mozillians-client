@@ -131,7 +131,7 @@ let retry = async (f, options) => {
   let retry = 0;
   while (true) {
     try {
-      return f();
+      return await f();
     } catch (err) {
       // Add number of retries to the error object
       err.retries = retry;
